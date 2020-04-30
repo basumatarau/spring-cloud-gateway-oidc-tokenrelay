@@ -11,16 +11,13 @@ import org.springframework.security.web.server.header.XFrameOptionsServerHttpHea
 @Configuration
 public class SecurityConfig {
 
+	//todo add aspects for caching the oauth2 authentication at gateway level with redis (via aspects)
+
 	@Bean
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
-															ReactiveClientRegistrationRepository clientRegistrationRepository,
-															RedisAuthRequestRepository RedisAuthRequestRepository) {
+															ReactiveClientRegistrationRepository clientRegistrationRepository) {
 		// Authenticate through configured OpenID Provider
-		http.oauth2Login()
-			.authorizationRequestRepository(RedisAuthRequestRepository);
-		//todo implement the proof of concept handlers
-		//	.authenticationSuccessHandler()
-		//	.authenticationFailureHandler();
+		http.oauth2Login();
 
 		// Also logout at the OpenID Connect provider
 		http.logout(logout -> logout.logoutSuccessHandler(new OidcClientInitiatedServerLogoutSuccessHandler(
